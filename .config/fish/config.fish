@@ -7,3 +7,4 @@ function fish_greeting
 end
 
 starship init fish | source
+atuin init fish | source

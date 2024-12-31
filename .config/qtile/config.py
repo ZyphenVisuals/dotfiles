@@ -27,18 +27,22 @@
 import os
 import subprocess
 from libqtile import bar, layout, qtile, widget, hook
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
 from libqtile.lazy import lazy
 
-# 1. VARIABLES
+# VARIABLES
 
 mod = "mod4"
 terminal = "kitty"
 browser = "vivaldi"
 launcher = "rofi -show drun"
 explorer = "thunar"
+volumemixer = "pwvucontrol"
 
-# 2. KEYBINDINGS
+ddsize = 0.8
+ddopacity = 1
+
+# KEYBINDINGS
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -74,7 +78,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     # Launchers
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "t", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "w", lazy.spawn(browser), desc="Launch web browser."),
     Key([mod], "r", lazy.spawn(launcher), desc="Spawn an app using a graphical launcher"),
     Key([mod], "e", lazy.spawn(explorer), desc="Launch file explorer"),
@@ -120,7 +124,19 @@ for i in groups:
         ]
     )
 
-# 3. LAYOUTS
+# SCRATCHPADS
+
+groups.append(ScratchPad("scratchpad", [
+    DropDown("terminal", terminal, width=ddsize, height=ddsize, x=(1-ddsize)/2, y=(1-ddsize)/2, opacity=ddopacity),
+    DropDown("volume", volumemixer, width=ddsize, height=ddsize, x=(1-ddsize)/2, y=(1-ddsize)/2, opacity=ddopacity),
+]))
+
+keys.extend([
+    Key([mod], "Return", lazy.group["scratchpad"].dropdown_toggle("terminal")),
+    Key([mod], "v", lazy.group["scratchpad"].dropdown_toggle("volume")),
+])
+
+# LAYOUTS
 
 layouts = [
     # layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
@@ -138,7 +154,7 @@ layouts = [
     # layout.Zoomy(),
 ]
 
-# 4. SCREENS
+# SCREENS
 
 widget_defaults = dict(
     font="sans",
@@ -175,7 +191,7 @@ screens = [
     ),
 ]
 
-# 5. INPUT
+# INPUT
 
 # Drag floating layouts.
 mouse = [

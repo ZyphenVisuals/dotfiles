@@ -35,6 +35,8 @@ from libqtile.lazy import lazy
 mod = "mod4"
 terminal = "kitty"
 browser = "vivaldi"
+launcher = "rofi -show drun"
+explorer = "thunar"
 
 # 2. KEYBINDINGS
 
@@ -71,10 +73,11 @@ keys = [
     Key([mod], "t", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # Launchers
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "w", lazy.spawn(browser), desc="Launch web browser."),
+    Key([mod], "r", lazy.spawn(launcher), desc="Spawn an app using a graphical launcher"),
+    Key([mod], "e", lazy.spawn(explorer), desc="Launch file explorer"),
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -150,23 +153,16 @@ screens = [
         wallpaper_mode='fill',
         top=bar.Bar(
             [
-                widget.CurrentLayout(),
                 widget.GroupBox(),
-                widget.Prompt(),
                 widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
                 widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                widget.PulseVolume(),
+                widget.Backlight(backlight_name="amdgpu_bl1"),
+                widget.Wlan(),
+                widget.Battery(),
+                widget.Clock(format="%d-%m-%Y %I:%M %p"),
             ],
             30,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders

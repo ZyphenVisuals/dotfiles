@@ -175,7 +175,7 @@ screens = [
                 # widget.StatusNotifier(),
                 widget.Systray(),
                 widget.PulseVolume(),
-                widget.Backlight(backlight_name="amdgpu_bl1"),
+                widget.Backlight(backlight_name="amdgpu_bl1", step=5, change_command="brightnessctl s {0}%"),
                 widget.Wlan(),
                 widget.Battery(),
                 widget.Clock(format="%d-%m-%Y %I:%M %p"),
